@@ -8,3 +8,8 @@ lazy val commonSettings = Seq(
 lazy val tool = project
   .in(file("tool"))
   .settings(commonSettings: _*)
+
+lazy val service = project
+  .in(file("service"))
+  .enablePlugins(PlayScala)
+  .settings(commonSettings: _*)
