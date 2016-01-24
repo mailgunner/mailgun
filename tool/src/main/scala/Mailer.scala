@@ -2,7 +2,6 @@
 import models.EmailData
 import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
-import util.MailGunClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._

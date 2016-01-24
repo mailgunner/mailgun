@@ -1,5 +1,3 @@
-package util
-
 import com.ning.http.client.AsyncHttpClientConfig.Builder
 import com.ning.http.client.Realm.AuthScheme
 import com.ning.http.client._
