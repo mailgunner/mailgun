@@ -2,17 +2,19 @@ package controllers
 
 import errors.Errors.InvalidJsonError
 import models.SendEmailRequest
-import play.api.libs.json.Json
 import play.api.mvc._
+import services.{DefaultConfigComponent, ConfigComponent}
 import util.Implicits._
 import mailgun.MailGunClient
 import scala.concurrent.ExecutionContext.Implicits.global
 
-trait MailControllerEndpoints extends Controller with ControllerHelper {
+trait MailControllerEndpoints extends Controller with ConfigComponent with BaseController {
 
-  val apiKey = "some key"
-  val domain = "some domain"
-
+  /**
+   * POST /v1/mail
+   *
+   * Takes a SendEmailRequest and sends an email.
+   */
   def sendMail = Action.async(tryJsonParser) { request =>
     val res = for {
       req <- request.body.toFuture
@@ -26,9 +28,9 @@ trait MailControllerEndpoints extends Controller with ControllerHelper {
       case e: InvalidJsonError =>
         BadRequest(e.json)
       case e =>
-        InternalServerError(Json.parse("{}"))
+        InternalServerError(getJsonError(e))
     }
   }
 }
 
-class MailController extends MailControllerEndpoints
+class MailController extends MailControllerEndpoints with DefaultConfigComponent
