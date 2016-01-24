@@ -1,11 +1,11 @@
-import models.{WelcomeTemplate, PasswordResetTemplate, EmailData}
+import models.{PasswordResetTemplate, SendEmailRequest, WelcomeTemplate}
 import org.scalatest.{FlatSpec, Matchers}
 import play.api.libs.json.Json
 
 /**
  * Simple tests to make sure we're deserializing properly.
  */
-class EmailDataTest extends FlatSpec with Matchers {
+class SendEmailRequestTest extends FlatSpec with Matchers {
   "EmailData" should "read valid json to an email data" in {
     val s =
       s"""
@@ -22,14 +22,14 @@ class EmailDataTest extends FlatSpec with Matchers {
          |
      """.stripMargin
 
-    val expected = EmailData(
+    val expected = SendEmailRequest(
       to = "target@some.com",
       subject = "Hello!",
       body = Some("<h1>Hey!</h1>"),
       template = Some(PasswordResetTemplate("passwordReset", "Joe Black", None, "http://password-reset-url"))
     )
 
-    val deserialized = Json.parse(s).validate[EmailData].getOrElse(fail("Could not deserialize test data"))
+    val deserialized = Json.parse(s).validate[SendEmailRequest].getOrElse(fail("Could not deserialize test data"))
     deserialized shouldEqual expected
   }
 
@@ -49,14 +49,14 @@ class EmailDataTest extends FlatSpec with Matchers {
          |
      """.stripMargin
 
-    val expected = EmailData(
+    val expected = SendEmailRequest(
       to = "target@some.com",
       subject = "Hello!",
       body = Some("<h1>Hey!</h1>"),
       template = Some(WelcomeTemplate("welcome", "Joe Black", "http://confirm-acct-url"))
     )
 
-    val deserialized = Json.parse(s).validate[EmailData].getOrElse(fail("Could not deserialize test data"))
+    val deserialized = Json.parse(s).validate[SendEmailRequest].getOrElse(fail("Could not deserialize test data"))
     deserialized shouldEqual expected
   }
 
@@ -70,14 +70,14 @@ class EmailDataTest extends FlatSpec with Matchers {
          | }
      """.stripMargin
 
-    val expected = EmailData(
+    val expected = SendEmailRequest(
       to = "target@some.com",
       subject = "Hello!",
       body = Some("<h1>Hey!</h1>"),
       template = None
     )
 
-    val deserialized = Json.parse(s).validate[EmailData].getOrElse(fail("Could not deserialize test data"))
+    val deserialized = Json.parse(s).validate[SendEmailRequest].getOrElse(fail("Could not deserialize test data"))
     deserialized shouldEqual expected
   }
 
@@ -90,12 +90,12 @@ class EmailDataTest extends FlatSpec with Matchers {
          | }
      """.stripMargin
 
-    val expected = EmailData(
+    val expected = SendEmailRequest(
       to = "target@some.com",
       subject = "Hello!"
     )
 
-    val deserialized = Json.parse(s).validate[EmailData].getOrElse(fail("Could not deserialize test data"))
+    val deserialized = Json.parse(s).validate[SendEmailRequest].getOrElse(fail("Could not deserialize test data"))
     deserialized shouldEqual expected
   }
 }

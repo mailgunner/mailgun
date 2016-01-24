@@ -1,8 +1,10 @@
+package mailgun
+
 import com.ning.http.client.AsyncHttpClientConfig.Builder
 import com.ning.http.client.Realm.AuthScheme
 import com.ning.http.client._
 import com.ning.http.client.multipart.StringPart
-import models.EmailData
+import models.SendEmailRequest
 import play.api.libs.ws.WSResponse
 import play.api.libs.ws.ning.{NingWSClient, NingWSResponse}
 
@@ -33,7 +35,7 @@ class MailGunClient(apiKey: String, domain: String) {
   /**
    * Sends an email
    */
-  def sendEmail(data: EmailData): Future[WSResponse] = {
+  def sendEmail(data: SendEmailRequest): Future[WSResponse] = {
     // Play's WS client doesn't support multipart form uploads... should probably use Dispatch instead.
     val asyncHttpClient: AsyncHttpClient = wsClient.underlying
     val postBuilder = asyncHttpClient.preparePost(mailgunSendUrl)

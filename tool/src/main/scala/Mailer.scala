@@ -1,7 +1,8 @@
 
-import models.EmailData
-import play.api.libs.json.Json
+import mailgun.MailGunClient
+import models.SendEmailRequest
 import play.api.libs.ws.WSResponse
+import util.Implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -62,7 +63,7 @@ object Mailer extends App {
    */
   private def processEmail(mailer: MailGunClient, input: String): Unit = {
     val res: Future[WSResponse] = for {
-      data <- validateEmailData(input)
+      data <- SendEmailRequest.validate(input).toFuture
       templatedData = maybeAddTemplate(data)
       resp <- mailer.sendEmail(templatedData)
     } yield resp
@@ -73,32 +74,9 @@ object Mailer extends App {
   }
 
   /*
-   * Deserializes the input to an email data.
-   */
-  private def validateEmailData(s: String): Future[EmailData] = {
-    Future {
-      val js = Json.parse(s) // just let this throw the default json parse exception.
-      js.validate[EmailData].fold(
-        { e => throw new RuntimeException("Invalid json format")},
-        { v => v }
-      )
-    }
-
-    // Could also condense it like this:
-    //
-    // Future(Json.parse(s)).map(_.validate[EmailData].fold(
-    //   { e => throw new RuntimeException("Invalid json format") },
-    //   { v => v })
-    // )
-    //
-    // But separating it out is more readable and allows us to handle
-    // the exception from Json.parse().
-  }
-
-  /*
    * Replaces the body with the template if it exists, or returns the original data.
    */
-  private def maybeAddTemplate(data: EmailData) = {
+  private def maybeAddTemplate(data: SendEmailRequest) = {
     data.template.flatMap(t =>
       Some(data.copy(body = Some(t.toHtml), subject = t.subject))
     ).getOrElse(data)
