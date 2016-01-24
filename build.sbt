@@ -6,7 +6,7 @@ scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
   "com.typesafe.play"   %% "play-ws"    %  Versions.playWs,
-  "com.typesafe.play"   %% "play-json"  %  Versions.playJson
+  "com.typesafe.play"   %% "play-json"  %  Versions.playJson,
+  "com.lihaoyi"         %% "scalatags"  %  Versions.scalaTags,
+  "org.scalatest"       %% "scalatest"  %  Versions.scalaTest % "test"
 )
-
-    

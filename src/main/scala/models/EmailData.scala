@@ -1,12 +1,10 @@
 package models
 
 import com.ning.http.client.multipart.StringPart
-import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-// We might use type aliases for these Strings in some cases
-case class EmailData(to: String, subject: String, body: String) {
-
+case class EmailData(to: String, subject: String, body: Option[String] = None, template: Option[EmailTemplate] = None) {
   /**
    * Converts the fields into StringParts.
    */
@@ -14,19 +12,19 @@ case class EmailData(to: String, subject: String, body: String) {
     Seq(
       new StringPart("to", to, "UTF-8"),
       new StringPart("subject", subject, "UTF-8"),
-      new StringPart("html", body, "UTF-8")
+      new StringPart("html", body.getOrElse(""), "UTF-8")
     )
   }
 }
 
 object EmailData {
   // Play's JSON library is easy to use.
-  implicit val reads: Reads[EmailData] = (
+  implicit lazy val reads: Reads[EmailData] = (
     (__ \ "to").read[String](Reads.email) and
     (__ \ "subject").read[String] and
-    (__ \ "body").read[String]
+    (__ \ "body").readNullable[String] and
+    (__ \ "template").readNullable[EmailTemplate]
   )(EmailData.apply _)
 
-  implicit val writes: Writes[EmailData] = Json.writes[EmailData]
+  implicit lazy val writes: Writes[EmailData] = Json.writes[EmailData]
 }
-
