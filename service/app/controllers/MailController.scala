@@ -17,8 +17,9 @@ trait MailControllerEndpoints extends Controller with ControllerHelper {
     val res = for {
       req <- request.body.toFuture
       data <- SendEmailRequest.validate(req.toString()).toFuture
+      templatedData = data.copyTemplateToBody()
       client = new MailGunClient(apiKey, domain)
-      resp <- client.sendEmail(data)
+      resp <- client.sendEmail(templatedData)
     } yield Ok(resp.json)
 
     res.recover {

@@ -11,6 +11,7 @@ class SendEmailRequestTest extends FlatSpec with Matchers {
       s"""
          |{
          |  "to": "target@some.com",
+         |  "from": "sender@some.com",
          |  "subject": "Hello!",
          |  "body": "<h1>Hey!</h1>",
          |  "template": {
@@ -24,6 +25,7 @@ class SendEmailRequestTest extends FlatSpec with Matchers {
 
     val expected = SendEmailRequest(
       to = "target@some.com",
+      from = "sender@some.com",
       subject = "Hello!",
       body = Some("<h1>Hey!</h1>"),
       template = Some(PasswordResetTemplate("passwordReset", "Joe Black", None, "http://password-reset-url"))
@@ -38,6 +40,7 @@ class SendEmailRequestTest extends FlatSpec with Matchers {
       s"""
          |{
          |  "to": "target@some.com",
+         |  "from": "sender@some.com",
          |  "subject": "Hello!",
          |  "body": "<h1>Hey!</h1>",
          |  "template": {
@@ -51,6 +54,7 @@ class SendEmailRequestTest extends FlatSpec with Matchers {
 
     val expected = SendEmailRequest(
       to = "target@some.com",
+      from = "sender@some.com",
       subject = "Hello!",
       body = Some("<h1>Hey!</h1>"),
       template = Some(WelcomeTemplate("welcome", "Joe Black", "http://confirm-acct-url"))
@@ -65,6 +69,7 @@ class SendEmailRequestTest extends FlatSpec with Matchers {
       s"""
          | {
          |  "to": "target@some.com",
+         |  "from": "sender@some.com",
          |  "subject": "Hello!",
          |  "body": "<h1>Hey!</h1>"
          | }
@@ -72,6 +77,7 @@ class SendEmailRequestTest extends FlatSpec with Matchers {
 
     val expected = SendEmailRequest(
       to = "target@some.com",
+      from = "sender@some.com",
       subject = "Hello!",
       body = Some("<h1>Hey!</h1>"),
       template = None
@@ -86,12 +92,14 @@ class SendEmailRequestTest extends FlatSpec with Matchers {
       s"""
          | {
          |  "to": "target@some.com",
+         |  "from": "sender@some.com",
          |  "subject": "Hello!"
          | }
      """.stripMargin
 
     val expected = SendEmailRequest(
       to = "target@some.com",
+      from = "sender@some.com",
       subject = "Hello!"
     )
 

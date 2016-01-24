@@ -28,10 +28,6 @@ class MailGunClient(apiKey: String, domain: String) {
   // Same with the config. This would go into reference.conf
   private val mailgunSendUrl = s"https://api.mailgun.net/v3/$domain/messages"
 
-  // We'll hardcode the sender.
-  private val sender = "Mailgun Sandbox <postmaster@sandbox7c022de15a5c47d3b6a22af2652c6e38.mailgun.org>"
-  private val senderPart = new StringPart("from", sender, "UTF-8")
-
   /**
    * Sends an email
    */
@@ -39,12 +35,12 @@ class MailGunClient(apiKey: String, domain: String) {
     // Play's WS client doesn't support multipart form uploads... should probably use Dispatch instead.
     val asyncHttpClient: AsyncHttpClient = wsClient.underlying
     val postBuilder = asyncHttpClient.preparePost(mailgunSendUrl)
-    val Seq(to, subject, body) = data.toStringParts()
+    val Seq(to, from, subject, body) = data.toStringParts()
     val request = postBuilder
       .addBodyPart(to)
+      .addBodyPart(from)
       .addBodyPart(subject)
       .addBodyPart(body)
-      .addBodyPart(senderPart)
       .build()
 
     val promise = Promise[WSResponse]()

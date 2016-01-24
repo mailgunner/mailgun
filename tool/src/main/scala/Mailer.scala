@@ -64,21 +64,12 @@ object Mailer extends App {
   private def processEmail(mailer: MailGunClient, input: String): Unit = {
     val res: Future[WSResponse] = for {
       data <- SendEmailRequest.validate(input).toFuture
-      templatedData = maybeAddTemplate(data)
+      templatedData = data.copyTemplateToBody()
       resp <- mailer.sendEmail(templatedData)
     } yield resp
 
     val recovered = res.map(_.body).recover { case e => s"An error occurred: ${e.getMessage}"}
     val output = Await.result(recovered, 3.seconds) // Block for the mailer.
     println(output) // Just print out the result
-  }
-
-  /*
-   * Replaces the body with the template if it exists, or returns the original data.
-   */
-  private def maybeAddTemplate(data: SendEmailRequest) = {
-    data.template.flatMap(t =>
-      Some(data.copy(body = Some(t.toHtml), subject = t.subject))
-    ).getOrElse(data)
   }
 }
