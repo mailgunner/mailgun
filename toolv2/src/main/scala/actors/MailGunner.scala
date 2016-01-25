@@ -12,7 +12,7 @@ import scala.concurrent.duration._
 class MailGunner extends Actor with Stash with ActorLogging {
   val apiKey = ConfigFactory.load().getString("mailgunner.apiKey")
   val domain = ConfigFactory.load().getString("mailgunner.domain")
-  val timeout = ConfigFactory.load().getInt("mailgunner.timeout")
+  val timeout = ConfigFactory.load().getInt("mailgunner.timeout").seconds
   val client = new MailGunClient(apiKey, domain)
 
   def receive = waiting
@@ -25,8 +25,8 @@ class MailGunner extends Actor with Stash with ActorLogging {
        * Should validate the response from mailgun here since a 400 means we'll delete the message.
        */
       val futResp = client.sendEmail(data).map(_ => RemoveFromQueue(receipt)) pipeTo context.parent
-      Await.result(futResp, 5.seconds)
-      log.info(s"Email sent: ${data}")
+      Await.result(futResp, timeout)
+      log.info(s"Email sent: $data")
 
   }
 
