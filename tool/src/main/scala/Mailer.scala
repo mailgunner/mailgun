@@ -20,7 +20,7 @@ import scala.concurrent.{Await, Future}
  *    "body": "<h1>Hey!</h1>",
  *    "template": {
  *      "type": "passwordReset",
- *      "userName": "blah"
+ *      "userName": "blah",
  *      "resetUrl": "http://password-reset-url"
  *    }
  *  }
@@ -35,7 +35,7 @@ import scala.concurrent.{Await, Future}
  *    "body": "<h1>Hey!</h1>",
  *    "template": {
  *      "type": "welcome",
- *      "userName": "blah"
+ *      "userName": "blah",
  *      "confirmAcctUrl": "http://confirm-acct-url"
  *    }
  *  }
