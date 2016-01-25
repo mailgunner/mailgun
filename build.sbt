@@ -10,6 +10,12 @@ lazy val tool = project
   .settings(commonSettings: _*)
   .dependsOn(common)
 
+// For a lack of a better name.
+lazy val toolv2 = project
+  .in(file("toolv2"))
+  .settings(commonSettings: _*)
+  .dependsOn(common)
+
 lazy val service = project
   .in(file("service"))
   .enablePlugins(PlayScala)
