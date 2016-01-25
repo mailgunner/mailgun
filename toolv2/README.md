@@ -11,3 +11,6 @@ The SDS client uses the [default creds provider chain](http://docs.aws.amazon.co
 Build with: `sbt toolv2/assembly`, it will be `mailgunner/toolv2/target/scala-2.11/mailerv2.jar`
 
 Run with: `java -jar mailerv2.jar`
+
+## Creating test data
+To fill SDS with SendMessageRequest JSON strings, something like [this](https://gist.github.com/mailgunner/d53ff57b887952d2abde) could work.
